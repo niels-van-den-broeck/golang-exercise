@@ -36,3 +36,9 @@ func (s Status) String() string {
 func (p Priority) String() string {
 	return []string{"Low", "Medium", "High"}[p-1]
 }
+
+func (t Task) IsOverDue() bool {
+	now := time.Now()
+
+	return now.After(t.DueDate)
+}
