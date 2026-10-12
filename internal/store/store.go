@@ -2,6 +2,7 @@ package store
 
 import (
 	"crypto/rand"
+	application_error "nvdb/taskapp/internal/core"
 	"nvdb/taskapp/internal/task"
 	"time"
 )
@@ -16,22 +17,28 @@ func NewTaskStore() *TaskStore {
 	}
 }
 
-func (t *TaskStore) Add(task task.Task) task.Task {
-	task.ID = rand.Text()
-	task.CreatedAt = time.Now()
+func (t *TaskStore) Add(tsk task.Task) (task.Task, error) {
+	tsk.ID = rand.Text()
+	tsk.CreatedAt = time.Now()
 
-	t.tasks = append(t.tasks, task)
+	err := tsk.Validate()
 
-	return task
+	if err != nil {
+		return task.Task{}, err
+	}
+
+	t.tasks = append(t.tasks, tsk)
+
+	return tsk, nil
 }
 
-func (t *TaskStore) Get(id string) (task.Task, bool) {
+func (t *TaskStore) Get(id string) (task.Task, error) {
 	for _, task := range t.tasks {
 		if task.ID == id {
-			return task, true
+			return task, application_error.ErrNotFound
 		}
 	}
-	return task.Task{}, false
+	return task.Task{}, nil
 }
 
 func (t TaskStore) List() []task.Task {
