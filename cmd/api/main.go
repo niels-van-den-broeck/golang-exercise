@@ -9,7 +9,7 @@ import (
 
 func main() {
 	fmt.Println("task app starting")
-	taskStore := store.TaskStore{}
+	taskStore := store.MemoryStore{}
 
 	myTask, err := taskStore.Add(task.Task{})
 

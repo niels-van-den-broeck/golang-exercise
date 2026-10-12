@@ -1,4 +1,4 @@
-package application_error
+package core
 
 import "errors"
 
